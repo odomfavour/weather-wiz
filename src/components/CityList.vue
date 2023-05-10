@@ -57,7 +57,7 @@ const displayWeatherData = (location) => {
 .saved-location-section {
   min-height: 100vh;
   background: linear-gradient(45deg, #000000c7, #000000c9),
-    url(../../public/favorite.jpg) no-repeat;
+    url(/favorite.jpg) no-repeat;
   background-position: top center;
   background-size: cover;
 }
