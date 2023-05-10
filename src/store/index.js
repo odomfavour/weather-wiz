@@ -5,7 +5,8 @@ const store = createStore({
   state: {
     weatherData: null,
     searchHistory: [],
-    now: new Date()
+    now: new Date(),
+    apiKey: "0272983c99007b9d9ed9729bb3b9351e",
   },
   mutations: {
     SET_WEATHER_DATA(state, data) {
@@ -24,9 +25,10 @@ const store = createStore({
     },
   },
   actions: {
-    async fetchCurrentLocationWeatherData({ commit }, { latitude, longitude }) {
-      const apiKey = "0272983c99007b9d9ed9729bb3b9351e";
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+    async fetchCurrentLocationWeatherData({ commit, state }, { latitude, longitude }) {
+      console.log(state)
+      // const apiKey = "0272983c99007b9d9ed9729bb3b9351e";
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${state.apiKey}&units=metric`;
   
       try {
         commit("SET_IS_LOADING", true);
@@ -38,9 +40,9 @@ const store = createStore({
         commit("SET_IS_LOADING", false);
       }
     },
-    async fetchWeatherData({ commit }, searchTerm) {
-      const apiKey = process.env.VUE_APP_API_KEY;
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm}&appid=${apiKey}&units=metric`;
+    async fetchWeatherData({ commit, state }, searchTerm) {
+      // const apiKey = process.env.VUE_APP_API_KEY;
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm}&appid=${state.apiKey}&units=metric`;
 
       try {
         const response = await axios.get(url);

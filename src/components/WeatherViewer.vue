@@ -209,7 +209,10 @@ if (!localStorage.getItem("savedLocations")) {
 }
 
 @media (max-width: 426px) {
-
+  .country-header h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
   .city-detail {
     padding: 60px 20px;
   }
