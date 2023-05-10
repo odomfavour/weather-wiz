@@ -1,13 +1,11 @@
 <script setup>
 import SearchForm from "../components/SearchForm.vue";
-import axios from "axios";
 import { onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-const isLoading = ref(true);
 const weatherData = computed(() => store.state.weatherData);
-
+const isLoading =computed(() => store.state.isLoading)
 const getWeather = async (latitude, longitude) => {
   await store.dispatch("fetchCurrentLocationWeatherData", { latitude, longitude });
 };
@@ -84,7 +82,7 @@ onMounted(() => {
     <div class="search-section">
       <search-form />
       <div class="compartment">
-        <div>
+        <div class="previous-search">
           <p>Your Previous Searches</p>
           <p v-if="$store.state.searchHistory.length < 1">No searches yet</p>
           <button
@@ -164,6 +162,11 @@ onMounted(() => {
 
 .compartment {
   margin: 30px 0;
+}
+
+.previous-search {
+  height: 100px;
+  overflow-y: scroll ;
 }
 .compartment h3 {
   margin-bottom: 15px;

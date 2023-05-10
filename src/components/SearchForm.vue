@@ -16,7 +16,7 @@ const search = async () => {
     <form @submit.prevent="search">
       <div class="input-stretch">
         <input
-          v-model="searchTerm"
+          v-model.trim="searchTerm"
           type="text"
           placeholder="Search for a city"
         />
