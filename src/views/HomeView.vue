@@ -23,7 +23,7 @@ const backgroundImage = computed(() => {
     case "Snow":
       return "./snowy.jpg";
     default:
-      return "./cloudy.jpg";
+      return "./clear-sky.jpg";
   }
 });
 

@@ -6,7 +6,7 @@ const store = createStore({
     weatherData: null,
     searchHistory: [],
     now: new Date(),
-    apiKey: "0272983c99007b9d9ed9729bb3b9351e",
+    apiKey: import.meta.env.VITE_APP_API_KEY,
   },
   mutations: {
     SET_WEATHER_DATA(state, data) {
