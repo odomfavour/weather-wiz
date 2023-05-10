@@ -36,6 +36,7 @@ const store = createStore({
         commit("SET_WEATHER_DATA", response.data);
       } catch (error) {
         console.log(error);
+        alert(error.message)
       } finally {
         commit("SET_IS_LOADING", false);
       }
@@ -51,6 +52,7 @@ const store = createStore({
         router.push({ name: "result" });
       } catch (error) {
         console.log(error);
+        alert(error.message)
       }
     },
     fetchSavedLocation({ commit }) {

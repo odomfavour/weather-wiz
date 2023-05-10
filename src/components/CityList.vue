@@ -92,7 +92,7 @@ const displayWeatherData = (location) => {
   padding-bottom: 30px;
 }
 .location-card {
-  padding: 20px;
+  padding: 10px 20px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
   border-radius: 10px;
@@ -108,7 +108,7 @@ const displayWeatherData = (location) => {
 .delete-btn {
     background: cornsilk;
     color: red;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 5px;
     border: none;
     font-size: 20px;
@@ -133,6 +133,10 @@ const displayWeatherData = (location) => {
 
   .location-card {
     width: 100%;
+  }
+
+  .saved-location-section h3 {
+    font-size: 30px;
   }
 }
 </style>

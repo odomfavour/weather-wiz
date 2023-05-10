@@ -36,6 +36,7 @@ const search = async () => {
   border-radius: 6px;
   outline: none;
   border: none;
+  font-size: 16px;
 }
 
 .search-box button {

@@ -10,6 +10,23 @@ const getWeather = async (latitude, longitude) => {
   await store.dispatch("fetchCurrentLocationWeatherData", { latitude, longitude });
 };
 
+const weatherState = computed(() => store.state.weatherData?.weather[0].main);
+
+const backgroundImage = computed(() => {
+  switch (weatherState.value) {
+    case "Clear":
+      return "./clear-sky.jpg";
+    case "Clouds":
+      return "./cloudy.jpg";
+    case "Rain":
+      return "./rainy.jpg";
+    case "Snow":
+      return "./snowy.jpg";
+    default:
+      return "./cloudy.jpg";
+  }
+});
+
 // const getWeather = async (latitude, longitude) => {
 //   const apiKey = import.meta.env.VUE_APP_API_KEY;
 //   console.log(import.meta.env)
@@ -49,7 +66,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="weather-container">
+  <div class="weather-container" :style="{ backgroundImage: `linear-gradient(45deg, #00000080, #0000009c), url(${backgroundImage})` }">
     <div class="currentLocation">
       <h3>Weather-wiz</h3>
       <!-- {{ weatherData }} -->
@@ -122,7 +139,7 @@ onMounted(() => {
 .weather-container {
   min-height: 100vh;
   display: flex;
-  background: url(../assets/img/cloudy.jpg);
+  /* background: linear-gradient(45deg, #00000080, #0000009c), url(../assets/img/cloudy.jpg); */
   background-size: cover;
   background-position: center;
 }

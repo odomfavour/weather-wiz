@@ -116,6 +116,13 @@ if (!localStorage.getItem("savedLocations")) {
         <router-link to="/saved-locations" class="btn home-btn">View Saved Locations</router-link>
       </div>
     </div>
+    <div class="city-detail" v-else>
+      <h3>You have lost the country's data, go back and search again</h3>
+      <div class="flex justify-center home-btn-container">
+        <router-link to="/" class="btn home-btn">Back to Home</router-link>
+        <router-link to="/saved-locations" class="btn home-btn">View Saved Locations</router-link>
+      </div>
+    </div>
   </div>
 </template>
   
