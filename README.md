@@ -1,7 +1,7 @@
 # WeatherWiz
 
 This is a Vue3/Vuex application that displays weather information for a user's selected location. The application utilizes Vue.js,
-Weather API, routes for searching and viewing weather by location, and Vuex for keeping track of saved cities. The user can search for a location by entering the city and state, and the application will display the current weather information for that location. The user can also save a location to their list of saved cities, and the list will persist even after the user closes the application
+Weather API (Openweather api), routes for searching and viewing weather by location, and Vuex for keeping track of saved cities. The user can search for a location by entering the city and state, and the application will display the current weather information for that location. The user can also save a location to their list of saved cities, and the list will persist even after the user closes the application
 
 ## Installation
 
@@ -11,7 +11,6 @@ Once you have Node.js installed, you can run the following command to install th
 
 ```
 npm install
-
 ```
 
 This will install all of the required dependencies for the application.
