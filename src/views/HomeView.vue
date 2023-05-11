@@ -2,7 +2,6 @@
 import SearchForm from "../components/SearchForm.vue";
 import { onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
-import AlertModal from "../components/AlertModal.vue";
 
 const store = useStore();
 const weatherData = computed(() => store.state.weatherData);
