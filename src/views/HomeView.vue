@@ -2,12 +2,16 @@
 import SearchForm from "../components/SearchForm.vue";
 import { onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
+import AlertModal from "../components/AlertModal.vue";
 
 const store = useStore();
 const weatherData = computed(() => store.state.weatherData);
-const isLoading =computed(() => store.state.isLoading)
+const isLoading = computed(() => store.state.isLoading);
 const getWeather = async (latitude, longitude) => {
-  await store.dispatch("fetchCurrentLocationWeatherData", { latitude, longitude });
+  await store.dispatch("fetchCurrentLocationWeatherData", {
+    latitude,
+    longitude,
+  });
 };
 
 const weatherState = computed(() => store.state.weatherData?.weather[0].main);
@@ -27,119 +31,116 @@ const backgroundImage = computed(() => {
   }
 });
 
-// const getWeather = async (latitude, longitude) => {
-//   const apiKey = import.meta.env.VUE_APP_API_KEY;
-//   console.log(import.meta.env)
-//   console.log(apiKey)
-//   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
-
-//   try {
-//     const response = await axios.get(url);
-//     weatherData.value = response.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-//   isLoading.value = false;
-// };
-
 const searchForLocation = async (term) => {
   store.commit("addSearchToHistory", term);
   await store.dispatch("fetchWeatherData", term);
 };
-const formattedDateTime = computed(() => store.getters['formattedDateTime'])
+const formattedDateTime = computed(() => store.getters["formattedDateTime"]);
 
-store.dispatch('updateNow')
+store.dispatch("updateNow");
 
 onMounted(() => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      console.log(position)
+      console.log(position);
       const { latitude, longitude } = position.coords;
       getWeather(latitude, longitude);
     },
     (error) => {
       console.log(error);
+      if(error.code === 2) {
+        store.commit("SET_ERROR", "Seems like you have lost internet connection");
+      }
       isLoading.value = false;
     }
   );
 });
 </script>
 <template>
-  <div class="weather-container" :style="{ backgroundImage: `linear-gradient(45deg, #00000080, #0000009c), url(${backgroundImage})` }">
-    <div class="currentLocation">
-      <h3>Weather-wiz</h3>
-      <!-- {{ weatherData }} -->
-      <div v-if="isLoading">Loading...</div>
-      <div class="info" v-if="weatherData">
-        <h2 class="temp">{{ weatherData.main.temp }}°</h2>
-        <div>
-          <h2 class="country">{{ weatherData.name }}</h2>
-          <h4 class="date-info">{{formattedDateTime}}</h4>
-        </div>
-        <div class="weather-box">
+  <section>
+    <div
+      class="weather-container"
+      :style="{
+        backgroundImage: `linear-gradient(45deg, #00000080, #0000009c), url(${backgroundImage})`,
+      }"
+    >
+      <div class="currentLocation">
+        <h3>Weather-wiz</h3>
+        <div v-if="isLoading">Loading...</div>
+        <div class="info" v-if="weatherData">
+          <h2 class="temp">{{ weatherData.main.temp }}°</h2>
           <div>
-            <i
-              class="fas fa-sun"
-              v-if="weatherData.weather[0].main === 'Clear'"
-            ></i>
-            <i
-              class="fas fa-cloud"
-              v-if="weatherData.weather[0].main === 'Clouds'"
-            ></i>
-            <i
-              class="fas fa-cloud-rain"
-              v-if="weatherData.weather[0].main === 'Rain'"
-            ></i>
+            <h2 class="country">{{ weatherData.name }}</h2>
+            <h4 class="date-info">{{ formattedDateTime }}</h4>
           </div>
-          <h6 class="condition">{{ weatherData.weather[0].main }}</h6>
+          <div class="weather-box">
+            <div>
+              <i
+                class="fas fa-sun"
+                v-if="weatherData.weather[0].main === 'Clear'"
+              ></i>
+              <i
+                class="fas fa-cloud"
+                v-if="weatherData.weather[0].main === 'Clouds'"
+              ></i>
+              <i
+                class="fas fa-cloud-rain"
+                v-if="weatherData.weather[0].main === 'Rain'"
+              ></i>
+            </div>
+            <h6 class="condition">{{ weatherData.weather[0].main }}</h6>
+          </div>
+        </div>
+        <div v-else>
+          <h2>Failed to fetch weather of current location. Check your internet connectivity or enable your location</h2>
         </div>
       </div>
-    </div>
-    <div class="search-section">
-      <search-form />
-      <div class="compartment">
-        <div class="previous-search">
+      <div class="search-section">
+        <search-form />
+        <div class="compartment">
           <p>Your Previous Searches</p>
-          <p v-if="$store.state.searchHistory.length < 1">No searches yet</p>
-          <button
-            v-for="(search, index) in $store.state.searchHistory"
-            :key="index"
-            @click="searchForLocation(search)"
-            class="searched-item"
-          >
-            {{ search }}
-          </button>
+          <div class="previous-search">
+            <p v-if="$store.state.searchHistory.length < 1">No searches yet</p>
+            <button
+              v-for="(search, index) in $store.state.searchHistory"
+              :key="index"
+              @click="searchForLocation(search)"
+              class="searched-item"
+            >
+              {{ search }}
+            </button>
+          </div>
         </div>
+        <hr />
+        <div class="compartment" v-if="weatherData">
+          <h3>Weather Details</h3>
+          <div class="weather-details">
+            <h4>Humidity</h4>
+            <h4>{{ weatherData.main.humidity }}%</h4>
+          </div>
+          <div class="weather-details">
+            <h4>Temperature</h4>
+            <h4>{{ weatherData.main.temp }}°C</h4>
+          </div>
+          <div class="weather-details">
+            <h4>Wind Speed</h4>
+            <h4>{{ weatherData.wind.speed }} m/s</h4>
+          </div>
+        </div>
+       <div class="saved-link">
+        <router-link to="/saved-locations" class="btn sec-btn"
+          >View Saved Locations</router-link
+        >
+       </div>
       </div>
-      <hr />
-      <div class="compartment" v-if="weatherData">
-        <h3>Weather Details</h3>
-        <div class="weather-details">
-          <h4>Humidity</h4>
-          <h4>{{ weatherData.main.humidity }}%</h4>
-        </div>
-        <div class="weather-details">
-          <h4>Temperature</h4>
-          <h4>{{ weatherData.main.temp }}°C</h4>
-        </div>
-        <div class="weather-details">
-          <h4>Wind Speed</h4>
-          <h4>{{ weatherData.wind.speed }} m/s</h4>
-        </div>
-      </div>
-      <router-link to="/saved-locations" class="btn home-btn"
-        >View Saved Locations</router-link
-      >
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>
 .weather-container {
   min-height: 100vh;
   display: flex;
-  /* background: linear-gradient(45deg, #00000080, #0000009c), url(../assets/img/cloudy.jpg); */
   background-size: cover;
   background-position: center;
 }
@@ -183,10 +184,19 @@ onMounted(() => {
 
 .previous-search {
   height: 100px;
-  overflow-y: scroll ;
+  overflow-y: scroll;
 }
 .compartment h3 {
   margin-bottom: 15px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
 }
 
 .weather-details {
@@ -194,6 +204,14 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.saved-link {
+  margin-top: 20px;
+}
+
+.saved-link a {
+  display: inline-block;
 }
 
 .weather-details h4 {
@@ -211,13 +229,28 @@ onMounted(() => {
   font-size: 20px;
   color: #fff;
 }
+@media (max-width: 769px) {
+  .weather-container {
+    flex-direction: column;
+  }
+
+  .currentLocation {
+    width: 100%;
+    padding: 60px;
+  }
+
+  .search-section {
+    width: 100%;
+  }
+}
 
 @media (max-width: 426px) {
   .weather-container {
     flex-direction: column;
   }
 
-  .currentLocation, .search-section {
+  .currentLocation,
+  .search-section {
     width: 100%;
   }
 

@@ -1,10 +1,12 @@
 <script setup>
 import "@fortawesome/fontawesome-free/css/all.css";
+import AlertModal from "./components/AlertModal.vue";
 </script>
 
 <template>
   <div>
     <router-view />
+    <alert-modal/>
   </div>
 </template>
 
@@ -56,13 +58,32 @@ import "@fortawesome/fontawesome-free/css/all.css";
 }
 
 .primary-btn {
-  background: goldenrod;
+  background: #0077be;
   color: #fff;
+  font-size: 18px;
 }
 
-.home-btn {
-  background: rgb(108, 82, 15);
-  color: #fff;
+.sec-btn {
+  border: 2px solid #0077be;
+  color: #0077be;
+  background: #fff;
   text-decoration: none;
+  font-size: 18px;
+}
+
+.back-home {
+  margin-bottom: 30px;
+}
+
+.round-btn {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: #000;
 }
 </style>

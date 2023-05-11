@@ -6,7 +6,7 @@ const searchTerm = ref("");
 const store = useStore();
 
 const search = async () => {
-    store.commit("addSearchToHistory", searchTerm.value);
+  store.commit("addSearchToHistory", searchTerm.value);
   await store.dispatch("fetchWeatherData", searchTerm.value);
 };
 </script>
@@ -32,7 +32,7 @@ const search = async () => {
 }
 .search-box input {
   width: 100%;
-  padding: 15px;
+  padding: 15px 80px 15px 15px;
   border-radius: 6px;
   outline: none;
   border: none;
@@ -40,16 +40,19 @@ const search = async () => {
 }
 
 .search-box button {
-  background: orangered;
+  background: #0077be;
   border-radius: 6px;
   border: none;
   color: #fff;
   padding: 10px;
   cursor: pointer;
+  position: absolute;
+  right: 5px;
+  top: 6px;
 }
 
 .search-box .input-stretch {
   display: flex;
-  gap: 20px;
+  position: relative;
 }
 </style>

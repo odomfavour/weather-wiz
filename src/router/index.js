@@ -10,7 +10,7 @@ const routes = [{
         component: HomeView,
     },
     {
-        path: "/searched-city",
+        path: "/search-result",
         name: "result",
         component: ResultView,
     },

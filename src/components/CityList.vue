@@ -26,14 +26,16 @@ const displayWeatherData = (location) => {
   <div class="saved-location-section">
     <div class="container">
       <!-- {{store.state.weatherData.name }}{{store.state.weatherData.sys.country }} -->
-
+      <div class="back-home">
+        <router-link to="/" class="btn round-btn"
+          ><i class="fa-solid fa-arrow-left"></i
+        ></router-link>
+      </div>
       <header>
-        <router-link to="/" class="btn home-btn">Back to Home</router-link>
         <div>
           <h3>Saved Locations</h3>
           <p>Find your saved locations here</p>
         </div>
-        <div></div>
       </header>
       <div class="locations-container">
         <div
@@ -66,15 +68,19 @@ const displayWeatherData = (location) => {
   width: 80%;
   margin: 0 auto;
 }
+
+.back-home {
+  padding-top: 40px;
+}
 .saved-location-section header {
-  padding: 40px 20px;
+  padding: 20px;
   color: #fff;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 .saved-location-section h3 {
-  padding-top: 30px;
   margin-bottom: 20px;
   font-size: 40px;
   font-weight: bold;
@@ -106,24 +112,24 @@ const displayWeatherData = (location) => {
 }
 
 .delete-btn {
-    background: cornsilk;
-    color: red;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    font-size: 20px;
-  }
+  background: #ccc;
+  color: red;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 20px;
+}
 @media (max-width: 769px) {
   .container {
     width: 90%;
   }
-.location-card {
-  width: 32%;
-}
+  .location-card {
+    width: 32%;
+  }
 
-.locations-container {
-  gap: 10px;
-}
+  .locations-container {
+    gap: 10px;
+  }
 }
 
 @media (max-width: 426px) {

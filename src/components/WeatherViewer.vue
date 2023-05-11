@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-const cityWeather = computed(() => store.state.weatherData)
+const cityWeather = computed(() => store.state.weatherData);
 
 const weatherState = computed(() => store.state.weatherData?.weather[0].main);
 
@@ -22,13 +22,13 @@ const backgroundImage = computed(() => {
   }
 });
 
-const formattedDateTime = computed(() => store.getters['formattedDateTime'])
+const formattedDateTime = computed(() => store.getters["formattedDateTime"]);
 
-store.dispatch('updateNow')
+store.dispatch("updateNow");
 
 const addLocation = (location) => {
   const savedLocations = JSON.parse(localStorage.getItem("savedLocations"));
-  if (!savedLocations.some(loc => loc.id === location.id)) {
+  if (!savedLocations.some((loc) => loc.id === location.id)) {
     savedLocations.push(location);
     localStorage.setItem("savedLocations", JSON.stringify(savedLocations));
   }
@@ -36,7 +36,7 @@ const addLocation = (location) => {
 
 const saveLocation = () => {
   addLocation(cityWeather.value);
-  alert("Saved successfully");
+  store.commit("SET_ALERT", "Your search has been saved successfully");
 };
 
 if (!localStorage.getItem("savedLocations")) {
@@ -47,80 +47,88 @@ if (!localStorage.getItem("savedLocations")) {
 <template>
   <div
     class="result-container"
-    :style="{ backgroundImage: `url(${backgroundImage})` }"
+    :style="{
+      backgroundImage: `linear-gradient(45deg, #00000080, #0000009c), url(${backgroundImage})`,
+    }"
   >
-    <div class="city-detail" v-if="cityWeather">
-      <div class="country-header flex justify-between items-center">
-        <div>
-          <h2>{{cityWeather.name}}, {{cityWeather.sys.country}}</h2>
-        <p>{{formattedDateTime}}</p>
-        </div>
-        <button class="btn primary-btn" @click="saveLocation">Save Location</button>
+    <div class="city-detail">
+      <div class="back-home">
+        <router-link to="/" class="btn round-btn"
+          ><i class="fa-solid fa-arrow-left"></i
+        ></router-link>
       </div>
-      <div class="drilled-info">
-        <div class="flex justify-between items-center weather-box" >
-          <div class="weather-state">
-            <div>
-            <i
-              class="fas fa-sun sun"
-              v-if="cityWeather.weather[0].main === 'Clear'"
-            ></i>
-            <i
-              class="fas fa-cloud cloud"
-              v-if="cityWeather.weather[0].main === 'Clouds'"
-            ></i>
-            <i
-              class="fas fa-cloud-rain rain"
-              v-if="cityWeather.weather[0].main === 'Rain'"
-            ></i>
+      <div class="" v-if="cityWeather">
+        <div class="country-header flex justify-between items-center">
+          <div>
+            <h2>{{ cityWeather.name }}, {{ cityWeather.sys.country }}</h2>
+            <p>{{ formattedDateTime }}</p>
           </div>
+          <button class="btn primary-btn" @click="saveLocation">
+            Save Location
+          </button>
+        </div>
+        <div class="drilled-info">
+          <div class="flex justify-between items-center weather-box">
+            <div class="weather-state">
+              <div>
+                <i
+                  class="fas fa-sun sun"
+                  v-if="cityWeather.weather[0].main === 'Clear'"
+                ></i>
+                <i
+                  class="fas fa-cloud cloud"
+                  v-if="cityWeather.weather[0].main === 'Clouds'"
+                ></i>
+                <i
+                  class="fas fa-cloud-rain rain"
+                  v-if="cityWeather.weather[0].main === 'Rain'"
+                ></i>
+              </div>
+            </div>
+            <div class="text-center">
+              <h2>{{ cityWeather.main.temp }}°</h2>
+              <p>{{ cityWeather.weather[0].main }}</p>
+            </div>
           </div>
-          <div class="text-center">
-            <h2>{{cityWeather.main.temp}}°</h2>
-          <p>{{cityWeather.weather[0].main}}</p>
+          <div class="other-box flex justify-between">
+            <div class="top-section">
+              <div>
+                <h4>{{ cityWeather.main.temp_max }}</h4>
+                <p>High</p>
+              </div>
+              <div>
+                <h4>{{ cityWeather.wind.speed }}mph</h4>
+                <p>Wind</p>
+              </div>
+              <div>
+                <h4>{{ cityWeather.main.humidity }}%</h4>
+                <p>Humidity</p>
+              </div>
+            </div>
+            <div class="bottom-section">
+              <div>
+                <h4>{{ cityWeather.main.temp_min }}</h4>
+                <p>Low</p>
+              </div>
+              <div>
+                <h4>{{ cityWeather.main.pressure }}in</h4>
+                <p>Pressure</p>
+              </div>
+              <div>
+                <h4>41%</h4>
+                <p>Precipitation</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="other-box flex justify-between">
-          <div class="top-section">
-            <div>
-              <h4>{{ cityWeather.main.temp_max }}</h4>
-              <p>High</p>
-            </div>
-            <div>
-              <h4>{{ cityWeather.wind.speed}}mph</h4>
-              <p>Wind</p>
-            </div>
-            <div>
-              <h4>{{ cityWeather.main.humidity }}%</h4>
-              <p>Humidity</p>
-            </div>
-          </div>
-          <div class="bottom-section">
-            <div>
-              <h4>{{ cityWeather.main.temp_min }}</h4>
-              <p>Low</p>
-            </div>
-            <div>
-              <h4>{{ cityWeather.main.pressure }}in</h4>
-              <p>Pressure</p>
-            </div>
-            <div>
-              <h4>41%</h4>
-              <p>Precipitation</p>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div class="" v-else>
+        <h3>You have lost the country's data, go back and search again</h3>
       </div>
       <div class="flex justify-center home-btn-container">
-        <router-link to="/" class="btn home-btn">Back to Home</router-link>
-        <router-link to="/saved-locations" class="btn home-btn">View Saved Locations</router-link>
-      </div>
-    </div>
-    <div class="city-detail" v-else>
-      <h3>You have lost the country's data, go back and search again</h3>
-      <div class="flex justify-center home-btn-container">
-        <router-link to="/" class="btn home-btn">Back to Home</router-link>
-        <router-link to="/saved-locations" class="btn home-btn">View Saved Locations</router-link>
+        <router-link to="/saved-locations" class="btn sec-btn"
+          >View Saved Locations</router-link
+        >
       </div>
     </div>
   </div>
@@ -142,7 +150,7 @@ if (!localStorage.getItem("savedLocations")) {
   width: 60%;
   border-radius: 15px;
   padding: 60px;
-  background: rgba(14, 12, 12, 0.15);
+  background: rgba(184, 182, 182, 0.15);
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   color: #fff;
@@ -150,7 +158,9 @@ if (!localStorage.getItem("savedLocations")) {
   min-height: 400px;
 }
 
-.top-section, .bottom-section, .drilled-info {
+.top-section,
+.bottom-section,
+.drilled-info {
   display: flex;
 }
 
@@ -177,17 +187,19 @@ if (!localStorage.getItem("savedLocations")) {
   font-size: 70px;
 }
 
-.top-section, .bottom-section {
+.top-section,
+.bottom-section {
   gap: 40px;
   text-align: center;
 }
 
-.top-section div, .bottom-section div {
+.top-section div,
+.bottom-section div {
   min-width: 10%;
-  
 }
 
-.top-section h4, .bottom-section h4 {
+.top-section h4,
+.bottom-section h4 {
   font-size: 20px;
 }
 
@@ -203,6 +215,10 @@ if (!localStorage.getItem("savedLocations")) {
 .home-btn-container {
   margin-top: 30px;
   gap: 10px;
+}
+
+.city-detail h3 {
+  text-align: center;
 }
 
 @media (max-width: 769px) {
@@ -241,7 +257,8 @@ if (!localStorage.getItem("savedLocations")) {
     gap: 30px;
   }
 
-  .weather-box, .other-box {
+  .weather-box,
+  .other-box {
     width: 100%;
   }
 
@@ -252,7 +269,6 @@ if (!localStorage.getItem("savedLocations")) {
   .top-section {
     margin-bottom: 30px;
   }
-
 }
 </style>
   
