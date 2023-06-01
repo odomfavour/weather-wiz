@@ -17,6 +17,7 @@ const store = createStore({
       state.weatherData = data;
     },
     addSearchToHistory(state, search) {
+      state.searchHistory = state.searchHistory || [];
       if (!state.searchHistory.includes(search.toLowerCase())) {
         state.searchHistory.push(search);
         localStorage.setItem('searchHistory', JSON.stringify(state.searchHistory))
