@@ -6,8 +6,10 @@ const searchTerm = ref("");
 const store = useStore();
 
 const search = async () => {
-  store.commit("addSearchToHistory", searchTerm.value);
-  await store.dispatch("fetchWeatherData", searchTerm.value);
+  if (searchTerm.value) {
+    store.commit("addSearchToHistory", searchTerm.value);
+    await store.dispatch("fetchWeatherData", searchTerm.value);
+  }
 };
 </script>
 

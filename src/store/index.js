@@ -10,6 +10,7 @@ const store = createStore({
     isError: null,
     errorMsg: null,
     alertMsg: null,
+    savedLocations: null
   },
   mutations: {
     SET_WEATHER_DATA(state, data) {
@@ -18,8 +19,19 @@ const store = createStore({
     addSearchToHistory(state, search) {
       if (!state.searchHistory.includes(search.toLowerCase())) {
         state.searchHistory.push(search);
+        localStorage.setItem('searchHistory', JSON.stringify(state.searchHistory))
       }
+
     },
+    removeSearchFromHistory(state, search) {
+        state.searchHistory = state.searchHistory.filter(
+          entry => entry.toLowerCase() !== search.toLowerCase()
+        );
+        localStorage.setItem('searchHistory', JSON.stringify(state.searchHistory));
+        state.searchHistory = [...state.searchHistory]; // Update the array reference
+      
+    },
+    
     SET_NOW(state, now) {
       state.now = now;
     },
@@ -71,7 +83,6 @@ const store = createStore({
 
       try {
         const response = await axios.get(url);
-        console.log(response.data);
         commit("SET_WEATHER_DATA", response.data);
         router.push({ name: "result" });
       } catch (error) {
@@ -99,38 +110,52 @@ const store = createStore({
   },
   getters: {
     formattedDateTime(state) {
-      const daysOfWeek = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      const monthsOfYear = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      const dayOfWeek = daysOfWeek[state.now.getDay()];
-      const dayOfMonth = state.now.getDate();
-      const month = monthsOfYear[state.now.getMonth()];
-      const year = state.now.getFullYear();
+      let setDate = Intl.DateTimeFormat('en-us', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour12: true}).format(state.now)
+      // const daysOfWeek = [
+      //   "Sunday",
+      //   "Monday",
+      //   "Tuesday",
+      //   "Wednesday",
+      //   "Thursday",
+      //   "Friday",
+      //   "Saturday",
+      // ];
+      // const monthsOfYear = [
+      //   "January",
+      //   "February",
+      //   "March",
+      //   "April",
+      //   "May",
+      //   "June",
+      //   "July",
+      //   "August",
+      //   "September",
+      //   "October",
+      //   "November",
+      //   "December",
+      // ];
+      // const dayOfWeek = daysOfWeek[state.now.getDay()];
+      // const dayOfMonth = state.now.getDate();
+      // const month = monthsOfYear[state.now.getMonth()];
+      // const year = state.now.getFullYear();
+
+      // Extract the AM/PM indicator separately
+let amPm = Intl.DateTimeFormat('en-us', {
+  hour: 'numeric',
+  hour12: true // Enable 12-hour format
+}).formatToParts(state.now).find(part => part.type === 'dayPeriod').value;
+
       const hours = state.now.getHours().toString().padStart(2, "0");
       const minutes = state.now.getMinutes().toString().padStart(2, "0");
-      const formattedDateTime = `${hours}:${minutes}-${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
+      // const formattedDateTime = `${hours}:${minutes}-${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
+      const formattedDateTime = `${hours}:${minutes} ${amPm} - ${setDate}`;
       return formattedDateTime;
     },
+    getHistories(state) {
+      let parsedHistory = JSON.parse(localStorage.getItem('searchHistory'))
+      state.searchHistory = parsedHistory
+      return state.searchHistory
+    }
   },
 });
 

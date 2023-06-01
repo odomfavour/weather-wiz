@@ -37,7 +37,7 @@ const displayWeatherData = (location) => {
           <p>Find your saved locations here</p>
         </div>
       </header>
-      <div class="locations-container">
+      <div class="locations-container" v-if="savedLocations > 0">
         <div
           class="location-card"
           v-for="location in savedLocations"
@@ -50,6 +50,9 @@ const displayWeatherData = (location) => {
             <i class="fas fa-times"></i>
           </button>
         </div>
+      </div>
+      <div v-else>
+        <p class="note">You do not have a location saved yet. Your saved locations will show up here when you save them.</p>
       </div>
     </div>
   </div>
@@ -111,13 +114,8 @@ const displayWeatherData = (location) => {
   height: 100%;
 }
 
-.delete-btn {
-  background: #ccc;
-  color: red;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: none;
-  font-size: 20px;
+.note {
+  color: white;
 }
 @media (max-width: 769px) {
   .container {

@@ -39,6 +39,23 @@ const saveLocation = () => {
   store.commit("SET_ALERT", "Your search has been saved successfully");
 };
 
+// let parsedLocations = JSON.parse(localStorage.getItem("savedLocations"))
+// // let filteredLocation = () => {
+// //   return parsedLocations.some((loc) => loc.id === cityWeather)
+// // }
+// console.log(parsedLocations)
+// const check = (x) => {
+//   if(x) {
+    
+//   // console.log(x)
+//   return  x.coord?.lat === cityWeather.coord?.lat && x.coord?.lon === cityWeather.coord?.lon
+//   }
+// }
+const isLocationSaved = computed(() => {
+  const savedLocations = JSON.parse(localStorage.getItem("savedLocations"));
+  return savedLocations.some((loc) => loc.id === cityWeather.value.id);
+});
+
 if (!localStorage.getItem("savedLocations")) {
   localStorage.setItem("savedLocations", "[]");
 }
@@ -63,7 +80,7 @@ if (!localStorage.getItem("savedLocations")) {
             <h2>{{ cityWeather.name }}, {{ cityWeather.sys.country }}</h2>
             <p>{{ formattedDateTime }}</p>
           </div>
-          <button class="btn primary-btn" @click="saveLocation">
+          <button class="btn primary-btn" @click="saveLocation" v-if="!isLocationSaved">
             Save Location
           </button>
         </div>

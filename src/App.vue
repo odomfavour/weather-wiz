@@ -75,6 +75,16 @@ import AlertModal from "./components/AlertModal.vue";
   margin-bottom: 30px;
 }
 
+.delete-btn {
+  background: #ccc;
+  color: red;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 .round-btn {
   height: 50px;
   width: 50px;

@@ -35,20 +35,25 @@ const searchForLocation = async (term) => {
   await store.dispatch("fetchWeatherData", term);
 };
 const formattedDateTime = computed(() => store.getters["formattedDateTime"]);
-
+const histories = computed(() => store.getters["getHistories"]);
+const removeLocation = (location) => {
+  store.commit("removeSearchFromHistory", location);
+};
 store.dispatch("updateNow");
 
 onMounted(() => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      console.log(position);
       const { latitude, longitude } = position.coords;
       getWeather(latitude, longitude);
     },
     (error) => {
       console.log(error);
-      if(error.code === 2) {
-        store.commit("SET_ERROR", "Seems like you have lost internet connection");
+      if (error.code === 2) {
+        store.commit(
+          "SET_ERROR",
+          "Seems like you have lost internet connection"
+        );
       }
       isLoading.value = false;
     }
@@ -91,7 +96,10 @@ onMounted(() => {
           </div>
         </div>
         <div v-else>
-          <h2>Failed to fetch weather of current location. Check your internet connectivity or enable your location</h2>
+          <h2>
+            Failed to fetch weather of current location. Check your internet
+            connectivity or enable your location
+          </h2>
         </div>
       </div>
       <div class="search-section">
@@ -99,20 +107,24 @@ onMounted(() => {
         <div class="compartment">
           <p>Your Previous Searches</p>
           <div class="previous-search">
-            <p v-if="$store.state.searchHistory.length < 1">No searches yet</p>
-            <button
-              v-for="(search, index) in $store.state.searchHistory"
+            <p v-if="histories && histories.length < 1">No searches yet</p>
+            <div
+              class="location-stretch"
+              v-for="(search, index) in histories"
               :key="index"
-              @click="searchForLocation(search)"
-              class="searched-item"
             >
-              {{ search }}
-            </button>
+              <button @click="searchForLocation(search)" class="searched-item">
+                {{ search }}
+              </button>
+              <button @click="removeLocation(search)" class="delete-btn">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
           </div>
         </div>
         <hr />
         <div class="compartment" v-if="weatherData">
-          <h3>Weather Details</h3>
+          <h3>Current Location Weather Detail</h3>
           <div class="weather-details">
             <h4>Humidity</h4>
             <h4>{{ weatherData.main.humidity }}%</h4>
@@ -126,11 +138,11 @@ onMounted(() => {
             <h4>{{ weatherData.wind.speed }} m/s</h4>
           </div>
         </div>
-       <div class="saved-link">
-        <router-link to="/saved-locations" class="btn sec-btn"
-          >View Saved Locations</router-link
-        >
-       </div>
+        <div class="saved-link">
+          <router-link to="/saved-locations" class="btn sec-btn"
+            >View Saved Locations</router-link
+          >
+        </div>
       </div>
     </div>
   </section>
@@ -162,6 +174,12 @@ onMounted(() => {
 .currentLocation .info .temp {
   font-size: 100px;
   margin-bottom: 0;
+}
+
+.location-stretch {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .currentLocation .info .condition {
